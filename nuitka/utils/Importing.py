@@ -177,7 +177,14 @@ def importFromInlineCopy(module_name, must_exist, delete_module=False):
     )
 
     if delete_module and module_name in sys.modules:
-        del sys.modules[module_name]
+        delete_module_names = set([module_name])
+
+        for m in sys.modules:
+            if m.startswith(module_name + "."):
+                delete_module_names.add(m)
+
+        for delete_module_name in delete_module_names:
+            del sys.modules[delete_module_name]
 
     return module
 
